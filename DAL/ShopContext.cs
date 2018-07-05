@@ -10,7 +10,7 @@ namespace Shop.DAL
 {
     public class ShopContext: DbContext
     {
-        public ShopContext() : base("SchoolContext")
+        public ShopContext() : base("shopContext")
         {
         }
 

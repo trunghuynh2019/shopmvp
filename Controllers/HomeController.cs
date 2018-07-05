@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,7 +11,22 @@ namespace Shop.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            Boolean res;
+            string constring = System.Configuration.ConfigurationManager.ConnectionStrings["ShopContext"].ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(constring))
+            {
+                try
+                {
+                    connection.Open();
+                    res = true;
+                }
+                catch (SqlException)
+                {
+                    res = false;
+                }
+            }
+            return View(res);
         }
 
         public ActionResult About()
