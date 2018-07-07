@@ -11,22 +11,8 @@ namespace Shop.Controllers
     {
         public ActionResult Index()
         {
-            Boolean res;
-            string constring = System.Configuration.ConfigurationManager.ConnectionStrings["ShopContext"].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(constring))
-            {
-                try
-                {
-                    connection.Open();
-                    res = true;
-                }
-                catch (SqlException)
-                {
-                    res = false;
-                }
-            }
-            return View(res);
+            ViewBag.Message = "Home";
+            return View();
         }
 
         public ActionResult About()
