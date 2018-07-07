@@ -2,127 +2,105 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 using Shop.DAL;
 using Shop.Models;
+using Shop.Services;
+
 
 namespace Shop
 {
+    public class StoreDto
+    {
+        public string name { get; set; }
+        public string address { get; set; }
+    }
     public class StoresController : Controller
     {
-        private ShopContext db = new ShopContext();
+        private IStoreService storeService;
+
+        public StoresController()
+        {
+            this.storeService = new StoreService(new ShopContext());
+        }
+
+        private string toJson(object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        private ContentResult toContent(object obj)
+        {
+            return Content(toJson(obj), "application/json");
+        }
 
         // GET: Stores
-        public ActionResult Index()
+        public ActionResult ReadAll()
         {
-            return View(db.Stores.ToList());
+            //return Json(db.Stores.ToList(), JsonRequestBehavior.AllowGet);
+            return toContent(storeService.FindAll());
         }
 
         // GET: Stores/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Read(int? id)
         {
-            if (id == null)
+            return toContent(storeService.FindOne(id.Value));
+        }
+        // POST: Stores
+        public ActionResult Create(StoreDto dto)
+        {
+            Store store = Store.FromNameAndAddress(dto.name, dto.address);
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return toContent(storeService.Save(store));
             }
-            Store store = db.Stores.Find(id);
+            catch (DbEntityValidationException e)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+            }
+        }
+
+        public ActionResult Update(int? id, StoreDto dto)
+        {
+            var store = storeService.FindOne(id.Value);
             if (store == null)
             {
-                return HttpNotFound();
+                return HttpNotFound($"id ${id} not found");
             }
-            return View(store);
-        }
-
-        // GET: Stores/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Stores/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id")] Store store)
-        {
-            if (ModelState.IsValid)
+            try
             {
-                db.Stores.Add(store);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return toContent(storeService.Update(store, dto.name, dto.address));
             }
-
-            return View(store);
+            catch (DbEntityValidationException e)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
-        // GET: Stores/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Store store = db.Stores.Find(id);
-            if (store == null)
-            {
-                return HttpNotFound();
-            }
-            return View(store);
-        }
-
-        // POST: Stores/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id")] Store store)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(store).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(store);
-        }
-
-        // GET: Stores/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Store store = db.Stores.Find(id);
+            var store = storeService.FindOne(id.Value);
             if (store == null)
             {
-                return HttpNotFound();
+                return HttpNotFound($"id ${id} not found");
             }
-            return View(store);
-        }
-
-        // POST: Stores/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Store store = db.Stores.Find(id);
-            db.Stores.Remove(store);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            try
             {
-                db.Dispose();
+                storeService.Delete(id.Value);
+                return toContent(new object());
             }
-            base.Dispose(disposing);
+            catch (DbEntityValidationException e)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+            }
         }
+
+
     }
 }

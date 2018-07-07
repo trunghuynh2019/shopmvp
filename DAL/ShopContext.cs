@@ -14,7 +14,7 @@ namespace Shop.DAL
         {
         }
 
-        public DbSet<Store> Stores { get; set; }
+        public virtual DbSet<Store> Stores { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
