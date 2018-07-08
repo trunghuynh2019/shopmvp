@@ -40,7 +40,7 @@ namespace Shop
 
             routes.MapRoute(
                 name: "JsHandleProductsSold",
-                url: "ProductsSold/{action}/{id}",
+                url: "ProductSolds/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
