@@ -45,6 +45,7 @@ class BaseContainer extends Component {
                                 <li><Link to="/">Home</Link></li>
                                 <li><Link to="/customers">Customers</Link></li>
                                 <li><Link to="/stores">Stores</Link></li>
+                                <li><Link to="/productSolds">Product Solds</Link></li>
                             </ul>
                         </div>
                     </div>
