@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Shop.Models
 {
-    public class Store
+    public class Product
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonProperty("id")]
@@ -16,16 +16,16 @@ namespace Shop.Models
         [JsonProperty("name")]
         [Required]
         public string Name { get; set; }
-        [JsonProperty("address")]
+        [JsonProperty("price")]
         [Required]
-        public string Address { get; set; }
+        public double Price { get; set; }
 
-        public static Store FromNameAndAddress(string name, string address)
+        public static Product fromNameAndPrice(string name, double price)
         {
-            Store store = new Store();
-            store.Name = name;
-            store.Address = address;
-            return store;
+            Product product = new Product();
+            product.Name = name;
+            product.Price = price;
+            return product;
         }
 
     }
