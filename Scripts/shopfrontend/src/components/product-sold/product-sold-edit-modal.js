@@ -9,22 +9,40 @@ class ProductSoldEditModal extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        console.log(props);
+        
         this.state = {
             show: props.show,
-            name: props.store.name,
-            address: props.store.address,
-            id: props.store.id
+            store_id: props.productSold ? props.productSold.store_id : "",
+            product_id: props.productSold ? props.productSold.product_id : "",
+            customer_id: props.productSold ? props.productSold.customer_id: "",
+            date_sold: props.productSold ? props.productSold.date_sold: "",
+            id: props.productSold ? props.productSold.id : "",
+            products: [],
+            customers: [],
+            stores: []
         };
+
+        console.log(this.state);
+
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.store) {
+        if(nextProps.productSold) {
             this.setState({
-                name: nextProps.store.name,
-                address: nextProps.store.address,
-                id: nextProps.store.id
+                id: nextProps.productSold.id,
+                date_sold: nextProps.productSold.date_sold,
+                product_id: nextProps.productSold.product_id,
+                customer_id: nextProps.productSold.customer_id,
+                store_id: nextProps.productSold.store_id
+            });
+        }
+
+        if(nextProps.products) {
+            this.setState({
+                products: nextProps.products,
+                customers: nextProps.customers,
+                stores: nextProps.stores
             });
         }
         
@@ -48,19 +66,57 @@ class ProductSoldEditModal extends Component {
         this.setState({ show: true });
     }
 
+    renderSelect(hasIdvalues, thisValue, name) {
+        var options = hasIdvalues.map(function(x) {
+            if(x.id == thisValue) {
+                return <option value={x.id} selected>{x.name}</option>
+            } else {
+                return <option value={x.id}>{x.name}</option> 
+            }
+            
+        });
+        return (
+            <select name={name}>{options}</select>
+        );
+    }
+
+    initEmptyProductSold() {
+        if(! this.state.date_sold) {
+            this.state.date_sold = new Date().toISOString();
+        }
+        try {
+            if(! this.state.customer_id) {
+                this.state.customer_id = this.state.customers[0].id;
+            }
+            if(! this.state.product_id) {
+                this.state.product_id = this.state.products[0].id;
+            }
+            if(! this.state.store_id) {
+                this.state.store_id = this.state.stores[0].id;
+            }
+        } catch (error) {
+            
+        }
+        
+    }
+    
+
     render() {
         var that = this;
-        var store = this.props.store;
+        // support new action
+        this.initEmptyProductSold();
         return (
             <Modal show={this.props.show} onHide={this.handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add new Store</Modal.Title>
+                    <Modal.Title>Add new Product sold</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                        <p>Name: <input name="name" value={this.state.name}  /></p>
+                        <p>Stores: {this.renderSelect(this.state.stores, this.state.store_id, 'store_id')}</p>
+                        <p>customers: {this.renderSelect(this.state.customers, this.state.customer_id, 'customer_id')}</p>
+                        <p>Products: {this.renderSelect(this.state.products, this.state.product_id, 'product_id')}</p>
                         <input type="hidden" name="id" value={this.state.id}/>
-                        <p>Address: <textarea name="address" value={this.state.address}></textarea></p>
+                        <p>Date sold: <input name="date_sold" value={this.state.date_sold} /></p>
                         <p><input type="submit" value="Submit" /></p>
                     </form>
                 </Modal.Body>

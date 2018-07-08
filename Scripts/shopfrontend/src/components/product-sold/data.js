@@ -5,7 +5,12 @@ export const getAll = () => fetch(BASE_URL + "ProductSolds").then(res => res.jso
 });
 
 export const updateProductSold = (productSold) => fetchPut(BASE_URL + "ProductSolds/" + productSold.id, 
-    productSold).then(res => res.json()).catch(function() {
+    {
+        product_id: productSold.product_id,
+        customer_id: productSold.customer_id,
+        store_id: productSold.store_id,
+        date_sold: productSold.date_sold
+    }).then(res => res.json()).catch(function() {
         console.log("err getAll customer");
     });
 
