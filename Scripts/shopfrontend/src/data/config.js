@@ -3,8 +3,8 @@ export const BASE_URL = "/api/"
 export const fetchPost = (url, data) => fetch(url, {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
 });
@@ -12,8 +12,8 @@ export const fetchPost = (url, data) => fetch(url, {
 export const fetchPut = (url, data) => fetch(url, {
     method: 'PUT',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
 });
@@ -21,31 +21,49 @@ export const fetchPut = (url, data) => fetch(url, {
 export const fetchDelete = (url) => fetch(url, {
     method: 'DELETE',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
     }
 });
 
 export class HasIdList {
-  constructor(stores) {
-      this.stores = stores;
-  }
-  get() {
-      return this.stores;
-  }
-  upsert(store) {
-      console.log(store, this.stores);
-      var exited = false;
-      for (var i = 0; i < this.stores.length; i++) {
-          if (store.id == this.stores[i].id) {
-              console.log(store, this.stores[i]);
-              this.stores[i] = store;
-              exited = true;
-          }
-      }
-      if (!exited) {
-          this.stores.push(store);
-      }
-      return this;
-  }
+    
+    constructor(stores) {
+        this.stores = stores;
+    }
+
+    get() {
+        return this.stores;
+    }
+
+    upsert(store) {
+        console.log(store, this.stores);
+        var exited = false;
+        for (var i = 0; i < this.stores.length; i++) {
+            if (store.id == this.stores[i].id) {
+                console.log(store, this.stores[i]);
+                this.stores[i] = store;
+                exited = true;
+            }
+        }
+        if (!exited) {
+            this.stores.push(store);
+        }
+        return this;
+    }
+
+    getOne(id) {
+        return this.stores.find(x => x.id == id);
+    }
+
+    getOneName(id) {
+        if(id) {
+            var obj = this.stores.find(x => x.id == id);
+            if(obj) {
+                return obj.name;
+            }
+        }
+        return "";
+    }
+
 }

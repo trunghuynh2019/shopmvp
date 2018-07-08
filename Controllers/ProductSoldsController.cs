@@ -47,7 +47,8 @@ namespace Shop.Controllers
 
         public ActionResult Create(ProductSoldDto dto)
         {
-            ProductSold productSold = ProductSold.Of(productId: dto.product_id, customerId: dto.customer_id,
+            ProductSold productSold = ProductSold.Of(productId: dto.product_id, 
+                customerId: dto.customer_id,
                 storeId: dto.store_id);
             productSoldService.Save(productSold);
             return Content(toJson(productSold));

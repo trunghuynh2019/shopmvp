@@ -56,7 +56,8 @@ namespace Shop.Services
             }
         }
 
-        public ProductSold Update(ProductSold productSold, int productId, int customerId, int storeId, DateTime dateSold)
+        public ProductSold Update(ProductSold productSold, int productId, int customerId, int storeId, 
+            DateTime dateSold)
         {
             productSold.ProductId = productId;
             productSold.CustomerId = customerId;
