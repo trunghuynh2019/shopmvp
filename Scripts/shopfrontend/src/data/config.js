@@ -25,3 +25,27 @@ export const fetchDelete = (url) => fetch(url, {
       'Content-Type': 'application/json'
     }
 });
+
+export class HasIdList {
+  constructor(stores) {
+      this.stores = stores;
+  }
+  get() {
+      return this.stores;
+  }
+  upsert(store) {
+      console.log(store, this.stores);
+      var exited = false;
+      for (var i = 0; i < this.stores.length; i++) {
+          if (store.id == this.stores[i].id) {
+              console.log(store, this.stores[i]);
+              this.stores[i] = store;
+              exited = true;
+          }
+      }
+      if (!exited) {
+          this.stores.push(store);
+      }
+      return this;
+  }
+}
