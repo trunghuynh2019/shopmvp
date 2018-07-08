@@ -12,20 +12,20 @@ namespace Shop.DAL
         {
             List<Store> stores = new List<Store>()
             {
-                new Store() { Name = "store1", Address = "addresss1"},
-                new Store() { Name = "store2", Address = "addresss2"},
+                new Store() { Name = "Store NewYork", Address = "New York city"},
+                new Store() { Name = "Store London", Address = "London city"},
             };
 
             List<Customer> customers = new List<Customer>()
             {
-                new Customer() { Name = "customer2", Address = "addresss1"},
-                new Customer() { Name = "customer2", Address = "addresss2"},
+                new Customer() { Name = "Lyndon Stay", Address = "Wellington"},
+                new Customer() { Name = "Jennifer Smith", Address = "Christchurch"},
             };
 
             List<Product> products = new List<Product>()
             {
-                new Product() { Name = "customer2", Price = 100},
-                new Product() { Name = "customer2", Price = 300},
+                new Product() { Name = "Asus Computer", Price = 800},
+                new Product() { Name = "Ipad", Price = 500},
             };
 
             foreach (var customer in customers)
