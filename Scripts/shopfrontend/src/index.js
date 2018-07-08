@@ -6,12 +6,17 @@ import Customer from "./components/customer/Customer"
 import registerServiceWorker from './registerServiceWorker';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import Home from './components/Home';
+import Store from './components/store/store'
+import ProductSold from './components/product-sold/product-sold'
+
 
 
 ReactDOM.render((
     <Router history={browserHistory}>
         <Router path="/" component={Home} />
         <Router path="/customers" component={Customer} />
+        <Router path="/stores" component={Store} />
+        <Router path="/productSolds" component={ProductSold} />
     </Router>
 ), document.getElementById('root'));
 registerServiceWorker();
