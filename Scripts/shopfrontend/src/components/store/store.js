@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import React, {Component} from 'react'
 import BaseContainer from '../BaseContainer';
-import {getAll, updateStore} from "./data";
+import {getAll, updateStore, newStore, storeList, StoreList} from "./data";
 import StoreEditModal from "./store-edit-modal"
 
 class InnerStore extends Component {
@@ -44,12 +44,29 @@ class InnerStore extends Component {
         console.log("close popup");
     }
 
-    saveChange(changedStore) {
-        console.log("save change", changedStore);
-        updateStore(changedStore).then(function(item) {
-            console.log("return from upudate", item);
-        });
+    upsertStore(store) {
+        var newStores = new StoreList(this.state.stores).upsert(store).get();
+        this.setState({stores: newStores});
     }
+
+    saveChange(changedStore) {
+        var that = this;
+        if(changedStore && changedStore.id) {
+            console.log("save change", changedStore);
+            updateStore(changedStore).then(function(item) {
+                console.log("return from update", item);
+                that.upsertStore(item);
+            });
+        } else {
+            console.log("save change", changedStore);
+            newStore(changedStore).then(function(item) {
+                that.upsertStore(item);
+            });
+        }
+        
+    }
+
+
 
     findOne(id) {
         return this.state.stores.find(elm => elm.id == id);
@@ -80,6 +97,10 @@ class InnerStore extends Component {
                 <StoreEditModal show={this.state.showEditForm} store={this.state.currentStore} 
                     parentCallbackClose={this.closePopup}
                     handleCallbackSubmit={this.saveChange}></StoreEditModal>
+                <button type="button" className="btn btn-primary" 
+                                onClick={() => that.openEditPopup()}>
+                            Add new Store
+                            </button>
                 <table className="table">
                     <thead>
                         <tr>

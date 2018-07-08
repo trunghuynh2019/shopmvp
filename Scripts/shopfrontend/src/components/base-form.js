@@ -16,7 +16,6 @@ class BaseForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-
     handleSubmit(e) {
         e.preventDefault();
         console.log("handle submit");

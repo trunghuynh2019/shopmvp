@@ -2,9 +2,11 @@ import React from 'react';
 import { expect } from 'chai';
 import { render, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16'
+
 configure({ adapter: new Adapter() });
 
 import Store from "./store"
+import {StoreList} from "./data"
 
 describe('<Store mock test render nav />', () => {
     
@@ -21,6 +23,19 @@ describe('<Store mock test render nav />', () => {
         fetch.mockResponseOnce(JSON.stringify({ id: 25, name: "Shop25" }))
         const wrapper = render(<Store />, { disableLifecycleMethods: true });
         expect(wrapper.find('table').length).to.equal(1);
+    });
+
+    it('StoreList should correctly upsert data', () => {
+        var list = new StoreList([{id: 1, name: "a"}]);
+        list.upsert({id: 1, name: "bc"});
+        expect(list.get().length).to.equal(1);
+        expect(list.get()[0].name).to.equal("bc");
+
+        list.upsert({id: 2, name: "ef"});
+        expect(list.get().length).to.equal(2);
+        expect(list.get()[0].name).to.equal("bc");
+        expect(list.get()[1].name).to.equal("ef");
+
     });
 
 });

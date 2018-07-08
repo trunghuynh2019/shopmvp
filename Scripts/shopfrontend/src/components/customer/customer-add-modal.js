@@ -22,7 +22,6 @@ class CustomerAddModal extends Component {
         e.preventDefault();
         console.log("handle submit");
         console.log(this.state);
-        
     }
 
     handleChange(e) {

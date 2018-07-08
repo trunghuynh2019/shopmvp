@@ -3,6 +3,7 @@ import React, { Component } from "react"
 
 
 class StoreEditModal extends Component {
+
     constructor(props, context) {
         super(props, context);
         this.handleShow = this.handleShow.bind(this);
@@ -19,11 +20,14 @@ class StoreEditModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            name: nextProps.store.name,
-            address: nextProps.store.address,
-            id: nextProps.store.id
-        });
+        if(nextProps.store) {
+            this.setState({
+                name: nextProps.store.name,
+                address: nextProps.store.address,
+                id: nextProps.store.id
+            });
+        }
+        
     }
 
     handleSubmit(e) {
