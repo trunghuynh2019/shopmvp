@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Newtonsoft.Json;
+using Shop.DAL;
+using Shop.Models;
+using Shop.Services;
+
+namespace Shop.Controllers
+{
+    public class CustomerDto
+    {
+        public string name { get; set; }
+        public string address { get; set; }
+    }
+
+    public class CustomersController : Controller
+    {
+        private ICustomerService customerService;
+        public CustomersController()
+        {
+            this.customerService = new CustomerService(new ShopContext());
+        }
+
+        private string toJson(object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        private ContentResult toContent(object obj)
+        {
+            return Content(toJson(obj), "application/json");
+        }
+
+        // GET: Stores
+        public ActionResult ReadAll()
+        {
+            return Content(toJson(customerService.FindAll()));
+        }
+
+        public ActionResult Create(CustomerDto dto)
+        {
+            Customer customer = Customer.FromNameAndAddress(dto.name, dto.address);
+            customerService.Save(customer);
+            return Content(toJson(customer));
+        }
+    }
+}
