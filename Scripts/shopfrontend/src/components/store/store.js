@@ -1,7 +1,8 @@
 import { Link } from 'react-router';
 import React, {Component} from 'react'
 import BaseContainer from '../BaseContainer';
-import {getAll, updateStore, newStore, storeList, StoreList} from "./data";
+import {getAll, updateStore, newStore} from "./data";
+import { HasIdList } from "../../data/config";
 import StoreEditModal from "./store-edit-modal"
 
 class InnerStore extends Component {
@@ -45,7 +46,7 @@ class InnerStore extends Component {
     }
 
     upsertStore(store) {
-        var newStores = new StoreList(this.state.stores).upsert(store).get();
+        var newStores = new HasIdList(this.state.stores).upsert(store).get();
         this.setState({stores: newStores});
     }
 

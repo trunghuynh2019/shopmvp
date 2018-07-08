@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() });
 
 import Store from "./store"
-import {StoreList} from "./data"
+import { HasIdList } from "../../data/config";
 
 describe('<Store mock test render nav />', () => {
     
@@ -26,7 +26,7 @@ describe('<Store mock test render nav />', () => {
     });
 
     it('StoreList should correctly upsert data', () => {
-        var list = new StoreList([{id: 1, name: "a"}]);
+        var list = new HasIdList([{id: 1, name: "a"}]);
         list.upsert({id: 1, name: "bc"});
         expect(list.get().length).to.equal(1);
         expect(list.get()[0].name).to.equal("bc");
