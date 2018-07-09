@@ -1,4 +1,9 @@
+import PubSub from "pubsub-js";
 export const BASE_URL = "/api/"
+
+export const events = {
+    successfulUpdate: 'successfulUpdate'
+}
 
 export const fetchPost = (url, data) => fetch(url, {
     method: 'POST',
@@ -25,6 +30,22 @@ export const fetchDelete = (url) => fetch(url, {
         'Content-Type': 'application/json'
     }
 });
+
+export const publishEvent = (event, message) => {
+    if(event in events) {
+        PubSub.publish(event, message);
+    } else {
+        console.log("dangerous! seems like you publish event that is not in the list");
+    }
+}
+
+export const subscribeToEvent = (event, callback) => {
+    if(event in events) {
+        PubSub.subscribe(event, callback);
+    } else {
+        console.log("dangerous! seems like you publish event that is not in the list");
+    }
+}
 
 export class HasIdList {
     

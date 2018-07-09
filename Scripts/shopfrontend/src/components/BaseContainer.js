@@ -2,6 +2,9 @@ import React, {Component} from 'react'
 import { Link } from 'react-router';
 import Loader from './Loader';
 import CustomerAdd from "./customer/customer-add-modal";
+import {subscribeToEvent, publishEvent, events} from "../data/config"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class BaseContainer extends Component {
     state = {
@@ -11,6 +14,11 @@ class BaseContainer extends Component {
     constructor(props) {
         super(props);
         this.showLoading = this.showLoading.bind(this);
+        var that = this;
+        subscribeToEvent(events.successfulUpdate, function(event, message) {
+            toast("Wow so easy !" + message);
+        });
+        this.setSuccessful = this.setSuccessful.bind(this);
     }
 
     showLoading() {
@@ -21,6 +29,10 @@ class BaseContainer extends Component {
         this.setState({loading: false});
     }
 
+    setSuccessful() {
+        publishEvent(events.successfulUpdate, "hi; i am from setSuccessful");
+    }
+
     render() {
         var that = this;
         const childWithProp = React.Children.map(this.props.children, (child) => {
@@ -29,6 +41,7 @@ class BaseContainer extends Component {
         
         return (
             <div>
+                <ToastContainer />
                 <Loader loading={this.state.loading} />
                 <div className="navbar navbar-inverse navbar-fixed-top">
                     <div className="container">
@@ -46,6 +59,7 @@ class BaseContainer extends Component {
                                 <li><Link to="/customers">Customers</Link></li>
                                 <li><Link to="/stores">Stores</Link></li>
                                 <li><Link to="/productSolds">Product Solds</Link></li>
+                                <li><a onClick={this.setSuccessful}>Test click</a></li>
                             </ul>
                         </div>
                     </div>

@@ -1,7 +1,6 @@
 import { Modal, Button } from "react-bootstrap"
 import React, { Component } from "react"
 
-
 class ProductSoldEditModal extends Component {
 
     constructor(props, context) {
