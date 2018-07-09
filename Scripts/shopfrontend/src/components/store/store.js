@@ -4,6 +4,9 @@ import BaseContainer from '../BaseContainer';
 import {getAll, updateStore, newStore} from "./data";
 import { HasIdList } from "../../data/config";
 import StoreEditModal from "./store-edit-modal"
+import Dialog from 'react-bootstrap-dialog'
+import {Button} from 'react-bootstrap'
+import format from "string-format";
 
 class InnerStore extends Component {
 
@@ -15,19 +18,22 @@ class InnerStore extends Component {
                 {id: 25, name: "name25", address:"add25"}
             ],
             currentStoreId: "",
-            showEditForm: true,
+            showEditForm: false,
             currentStore: {}
         }
         this.openEditPopup = this.openEditPopup.bind(this);
         this.closePopup = this.closePopup.bind(this);
         this.saveChange = this.saveChange.bind(this);
+        this.deleteStore = this.showDeleteStore.bind(this);
     }
 
     componentDidMount() {
         var that = this;
         getAll().then(
             function(stores) {
-                that.setState({stores: stores});
+                if(stores) {
+                    that.setState({stores: stores});
+                }
             }
         );
     }
@@ -67,7 +73,32 @@ class InnerStore extends Component {
         
     }
 
+    showDeleteStore(store) {
+        var that = this;
+        this.dialog.show({
+            title: 'Delete',
+            body: format("You are about to delete: {name}, are you sure?", store),
+            actions: [
+              Dialog.CancelAction(),
+              Dialog.DefaultAction(
+                'Remove',
+                () => {
+                    that.deleteStore(store.id);
+                },
+                'btn-danger'
+              )
+            ],
+            bsSize: 'small',
+            onHide: (dialog) => {
+              dialog.hide()
+              console.log('closed by clicking background.')
+            }
+        });
+    }
 
+    deleteStore() {
+        
+    }
 
     findOne(id) {
         return this.state.stores.find(elm => elm.id == id);
@@ -83,10 +114,10 @@ class InnerStore extends Component {
                         <th scope="row">{store.id}</th>
                         <td>{store.name}</td>
                         <td>
-                            <button type="button" className="btn btn-warning" 
-                                onClick={() => that.openEditPopup(store.id)}>
-                            Edit
-                            </button>
+                            <Button bsStyle="warning" onClick={() => that.openEditPopup(store.id)}>Edit</Button>
+                        </td>
+                        <td>
+                            <Button bsStyle="danger" onClick={() => that.showDeleteStore(store)}>Delete</Button>
                         </td>
                     </tr>
                 );
@@ -95,18 +126,20 @@ class InnerStore extends Component {
         return (
             
             <div>
+                <Dialog ref={(el) => { this.dialog = el }} />
                 <StoreEditModal show={this.state.showEditForm} store={this.state.currentStore} 
                     parentCallbackClose={this.closePopup}
                     handleCallbackSubmit={this.saveChange}></StoreEditModal>
                 <button type="button" className="btn btn-primary" 
                                 onClick={() => that.openEditPopup()}>
                             Add new Store
-                            </button>
+                </button>
                 <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Update</th>
                             <th scope="col">Delete</th>
                         </tr>
                     </thead>
