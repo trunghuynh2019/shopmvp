@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import Customer from "./components/customer/Customer"
+import logo from './logo.svg';
+import './App.css';
+import './bootstrap.css';
+
+import Customer from "./components/customer/customer"
 import registerServiceWorker from './registerServiceWorker';
 import Product from "./components/product/product"
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
