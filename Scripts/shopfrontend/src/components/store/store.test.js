@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16'
 configure({ adapter: new Adapter() });
 
 import Store from "./store"
-import { HasIdList } from "../../data/config";
+import { HasIdList, events } from "../../data/config";
 
 describe('<Store mock test render nav />', () => {
     
@@ -44,6 +44,12 @@ describe('<Store mock test render nav />', () => {
         expect(list.get().length).to.equal(1);
         expect(list.get()[0].name).to.equal("ef");
 
+    });
+
+    it('Dev should not accidentally add wrong event', () => {
+        for(var key in events) {
+            expect(key).to.equal(events[key]);
+        }
     });
 
 });

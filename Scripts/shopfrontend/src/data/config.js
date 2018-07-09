@@ -6,9 +6,22 @@ export const BASE_URL = "/api/"
 export const events = {
     successfulUpdate: 'successfulUpdate',
     apiRequestError: 'apiRequestError',
+
     'store.removed': 'store.removed',
     'store.added': 'store.added',
     'store.updated': 'store.updated',
+
+    'customer.removed': 'customer.removed',
+    'customer.added': 'customer.added',
+    'customer.updated': 'customer.updated',
+
+    'product.removed': 'product.removed',
+    'product.added': 'product.added',
+    'product.updated': 'product.updated',
+
+    'productStore.removed': 'productStore.removed',
+    'productStore.added': 'productStore.added',
+    'productStore.updated': 'productStore.updated',
 }
 
 export const fetchGet = (url) => fetch(url).then(function(response) {
@@ -68,7 +81,7 @@ export const notifyApiRequestError = (message) => {
 }
 
 export const notifyApiRequestSuccessful = (message) => {
-    console.log("notifyApiRequestError");
+    console.log("notifyApiRequestSuccessful");
     publishEvent(events.apiRequestError, message);
 }
 

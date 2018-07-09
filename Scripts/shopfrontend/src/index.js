@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import Customer from "./components/customer/Customer"
 import registerServiceWorker from './registerServiceWorker';
+import Product from "./components/product/product"
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import Home from './components/Home';
 import Store from './components/store/store'
@@ -15,6 +16,7 @@ ReactDOM.render((
     <Router history={browserHistory}>
         <Router path="/" component={Home} />
         <Router path="/customers" component={Customer} />
+        <Router path="/products" component={Product} />
         <Router path="/stores" component={Store} />
         <Router path="/productSolds" component={ProductSold} />
     </Router>
