@@ -7,7 +7,7 @@ export const getAll = () => fetchGet(BASE_URL + "Stores").then(res => res.json()
 });;
 
 export const updateStore = (store) => fetchPut(BASE_URL + "Stores/" + store.id, store).then(res => res.json())
-    .catch(function() {
+    .catch(function(res) {
         console.log(res);
         notifyApiRequestError("Error while update Stores");
 });;

@@ -58,7 +58,7 @@ export const subscribeToEvent = (event, callback) => {
 }
 
 export const notifyApiRequestError = (message) => {
-    console.log("notifyApiRequestError");
+    console.log("notifyApiRequestEr");
     publishEvent(events.apiRequestError, message);
 }
 

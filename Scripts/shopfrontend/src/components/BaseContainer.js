@@ -17,9 +17,8 @@ class BaseContainer extends Component {
         this.showLoading = this.showLoading.bind(this);
         var that = this;
         subscribeToEvent(events.apiRequestError, function(event, message) {
-            toast(message);
+            toast.error(message);
         });
-        this.setSuccessful = this.setSuccessful.bind(this);
     }
 
     showLoading() {
@@ -28,10 +27,6 @@ class BaseContainer extends Component {
 
     hideLoading() {
         this.setState({loading: false});
-    }
-
-    setSuccessful() {
-        publishEvent(events.successfulUpdate, "hi; i am from setSuccessful");
     }
 
     render() {
@@ -60,7 +55,6 @@ class BaseContainer extends Component {
                                 <li><Link to="/customers">Customers</Link></li>
                                 <li><Link to="/stores">Stores</Link></li>
                                 <li><Link to="/productSolds">Product Solds</Link></li>
-                                <li><a onClick={this.setSuccessful}>Test click</a></li>
                             </ul>
                         </div>
                     </div>
