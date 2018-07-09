@@ -7,6 +7,7 @@ import StoreEditModal from "./store-edit-modal"
 import Dialog from 'react-bootstrap-dialog'
 import {Button} from 'react-bootstrap'
 import format from "string-format";
+import {toast} from 'react-toastify'
 
 class InnerStore extends Component {
 
@@ -32,10 +33,10 @@ class InnerStore extends Component {
     }
 
     componentDidMount() {
-        
         var that = this;
         this.tokenDeleteStoreEvent = subscribeToEvent(events['store.removed'], function(event, id) {
             console.log("inside subscriber to delete " + id);
+            toast.success(format("Delete store with id: {} successfully.", id));
             that.setState(
                 {stores: new HasIdList(that.state.stores).removeById(id).get()}
             );
