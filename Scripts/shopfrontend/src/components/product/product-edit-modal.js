@@ -59,7 +59,7 @@ class ProductEditModal extends Component {
                         </FormGroup>
                         <FormGroup controlId="formControlsAddress">
                             <ControlLabel>Price</ControlLabel>
-                            <FormControl name="price" type="number" placeholder="price" defaultValue={this.state.price} />
+                            <FormControl name="price" type="number" step="0.01" placeholder="price" defaultValue={this.state.price} />
                         </FormGroup>
                         <input type="hidden" name="id" value={this.state.id}/>
                         <p><input type="submit" value="Submit" /></p>
