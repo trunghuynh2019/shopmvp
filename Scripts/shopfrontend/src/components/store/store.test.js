@@ -36,6 +36,14 @@ describe('<Store mock test render nav />', () => {
         expect(list.get()[0].name).to.equal("bc");
         expect(list.get()[1].name).to.equal("ef");
 
+        list.removeById(1);
+        expect(list.get().length).to.equal(1);
+        expect(list.get()[0].name).to.equal("ef");
+
+        list.removeById(1);
+        expect(list.get().length).to.equal(1);
+        expect(list.get()[0].name).to.equal("ef");
+
     });
 
 });
