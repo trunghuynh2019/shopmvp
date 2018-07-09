@@ -51,15 +51,24 @@ export const publishEvent = (event, message) => {
 
 export const subscribeToEvent = (event, callback) => {
     if(event in events) {
-        PubSub.subscribe(event, callback);
+        return PubSub.subscribe(event, callback);
     } else {
         console.log("dangerous! seems like you publish event that is not in the list");
     }
 }
 
 export const notifyApiRequestError = (message) => {
-    console.log("notifyApiRequestEr");
+    console.log("notifyApiRequestError");
     publishEvent(events.apiRequestError, message);
+}
+
+export const notifyApiRequestSuccessful = (message) => {
+    console.log("notifyApiRequestError");
+    publishEvent(events.apiRequestError, message);
+}
+
+export function unSubscribeToEvent(token) {
+    PubSub.unsubscribe(token);
 }
 
 export class HasIdList {

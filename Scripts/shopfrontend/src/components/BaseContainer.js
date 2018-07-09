@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { Link } from 'react-router';
 import Loader from './Loader';
 import CustomerAdd from "./customer/customer-add-modal";
-import {subscribeToEvent, publishEvent, events} from "../data/config"
+import {subscribeToEvent, unSubscribeToEvent, events} from "../data/config"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,9 +16,7 @@ class BaseContainer extends Component {
         super(props);
         this.showLoading = this.showLoading.bind(this);
         var that = this;
-        subscribeToEvent(events.apiRequestError, function(event, message) {
-            toast.error(message);
-        });
+        
     }
 
     showLoading() {
@@ -27,6 +25,16 @@ class BaseContainer extends Component {
 
     hideLoading() {
         this.setState({loading: false});
+    }
+
+    componentDidMount() {
+        this.apiRequestErrorToken = subscribeToEvent(events.apiRequestError, function(event, message) {
+            toast.error(message);
+        });
+    }
+
+    componentWillUnmount() {
+        unSubscribeToEvent(this.apiRequestErrorToken);
     }
 
     render() {
