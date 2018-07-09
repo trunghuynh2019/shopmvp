@@ -26,7 +26,6 @@ class StoreEditModal extends Component {
                 id: nextProps.store.id
             });
         }
-        
     }
 
     handleSubmit(e) {

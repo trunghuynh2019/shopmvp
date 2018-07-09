@@ -1,10 +1,12 @@
 import PubSub from "pubsub-js";
+import format from "string-format"
 export const BASE_URL = "/api/"
 
 
 export const events = {
     successfulUpdate: 'successfulUpdate',
     apiRequestError: 'apiRequestError',
+    'store.removed': 'store.removed',
 }
 
 export const fetchGet = (url) => fetch(url).then(function(response) {
@@ -42,6 +44,7 @@ export const fetchDelete = (url) => fetch(url, {
 });
 
 export const publishEvent = (event, message) => {
+    console.log(format("publish event {} with message {}", event, message));
     if(event in events) {
         PubSub.publish(event, message);
     } else {
@@ -82,17 +85,23 @@ export class HasIdList {
     }
 
     upsert(store) {
-        console.log(store, this.stores);
         var exited = false;
         for (var i = 0; i < this.stores.length; i++) {
             if (store.id == this.stores[i].id) {
-                console.log(store, this.stores[i]);
                 this.stores[i] = store;
                 exited = true;
             }
         }
         if (!exited) {
             this.stores.push(store);
+        }
+        return this;
+    }
+
+    removeById(id) {
+        var index = this.stores.findIndex(x => x.id == id);
+        if(index > -1) {
+            this.stores.splice(index, 1);
         }
         return this;
     }

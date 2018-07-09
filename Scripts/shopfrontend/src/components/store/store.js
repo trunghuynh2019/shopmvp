@@ -1,8 +1,8 @@
 import { Link } from 'react-router';
 import React, {Component} from 'react'
 import BaseContainer from '../BaseContainer';
-import {getAll, updateStore, newStore} from "./data";
-import { HasIdList } from "../../data/config";
+import {getAll, updateStore, newStore, deleteStore as apiDeleteStore} from "./data";
+import { HasIdList, subscribeToEvent, events, unSubscribeToEvent } from "../../data/config";
 import StoreEditModal from "./store-edit-modal"
 import Dialog from 'react-bootstrap-dialog'
 import {Button} from 'react-bootstrap'
@@ -14,7 +14,7 @@ class InnerStore extends Component {
         super(props);
         this.state = {
             stores: [
-                {id: 20, name: "name20", address:"add"},
+                {id: 20, name: "name20", address:"add20"},
                 {id: 25, name: "name25", address:"add25"}
             ],
             currentStoreId: "",
@@ -24,11 +24,22 @@ class InnerStore extends Component {
         this.openEditPopup = this.openEditPopup.bind(this);
         this.closePopup = this.closePopup.bind(this);
         this.saveChange = this.saveChange.bind(this);
-        this.deleteStore = this.showDeleteStore.bind(this);
+        this.showDeleteStore = this.showDeleteStore.bind(this);
+    }
+
+    componentWillUnmount() {
+        unSubscribeToEvent(this.tokenDeleteStoreEvent);
     }
 
     componentDidMount() {
+        
         var that = this;
+        this.tokenDeleteStoreEvent = subscribeToEvent(events['store.removed'], function(event, id) {
+            console.log("inside subscriber to delete " + id);
+            that.setState(
+                {stores: new HasIdList(that.state.stores).removeById(id).get()}
+            );
+        });
         getAll().then(
             function(stores) {
                 if(stores) {
@@ -69,10 +80,10 @@ class InnerStore extends Component {
                 that.upsertStore(item);
             });
         }
-        
     }
 
     showDeleteStore(store) {
+        console.log(store);
         var that = this;
         this.dialog.show({
             title: 'Delete',
@@ -80,7 +91,7 @@ class InnerStore extends Component {
             actions: [
               Dialog.CancelAction(),
               Dialog.DefaultAction(
-                'Remove',
+                'Delete',
                 () => {
                     that.deleteStore(store.id);
                 },
@@ -95,8 +106,8 @@ class InnerStore extends Component {
         });
     }
 
-    deleteStore() {
-
+    deleteStore(id) {
+        apiDeleteStore(id);
     }
 
     findOne(id) {

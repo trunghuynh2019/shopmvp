@@ -27,12 +27,14 @@ export const deleteStore = (id) => fetchDelete(BASE_URL + "Stores/" + id)
     .then(res => 
     {
         try {
+            console.log("inside delete store");
             var json = res.json();
-            if(json.id) {
                 notifyDeleteStoreSuccessful(id);
-            }
+                console.log("inside if id");
+            
             return json;
         } catch(err) {
+            console.log("inside cat er");
             throw Error(err.message);
         }
         
