@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router';
 import Loader from './Loader';
-import CustomerAdd from "./customer/customer-add-modal";
 import {subscribeToEvent, unSubscribeToEvent, events} from "../data/config"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
