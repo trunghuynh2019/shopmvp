@@ -7,8 +7,12 @@ const notifyDeleteStoreSuccessful = (id) => {
     publishEvent(events['store.removed'], id);
 }
 
-const notifyAddStoreSuccessful = (store) => {
+const notifyUpdateStoreSuccessful = (store) => {
     publishEvent(events['store.updated'], store);
+}
+
+const notifyAddStoreSuccessful = (store) => {
+    publishEvent(events['store.added'], store);
 }
 
 export const getAll = () => fetchGet(BASE_URL + "Stores").then(res => res.json())
@@ -27,7 +31,7 @@ export const updateStore = (store) => fetchPut(BASE_URL + "Stores/" + store.id, 
         }
     }).then(
         alreadyJsonStore => {
-            notifyAddStoreSuccessful(alreadyJsonStore);
+            notifyUpdateStoreSuccessful(alreadyJsonStore);
             return alreadyJsonStore;
         }
     )
@@ -36,10 +40,23 @@ export const updateStore = (store) => fetchPut(BASE_URL + "Stores/" + store.id, 
         notifyApiRequestError("Error while update Stores");
     });
 
-export const newStore = (store) => fetchPost(BASE_URL + "Stores/", store).then(res => res.json())
+export const newStore = (store) => fetchPost(BASE_URL + "Stores/", store)
+    .then(res => {
+        try {
+            var json = res.json();
+            return json;
+        } catch (err) {
+            throw Error(err.message);
+        }
+    }).then(
+        alreadyJsonStore => {
+            notifyAddStoreSuccessful(alreadyJsonStore);
+            return alreadyJsonStore;
+        }
+    )
     .catch(function (res) {
         console.log(res);
-        notifyApiRequestError("Error while add new Stores");
+        notifyApiRequestError("Error while update Stores");
     });
 
 export const deleteStore = (id) => fetchDelete(BASE_URL + "Stores/" + id)

@@ -29,6 +29,7 @@ class InnerStore extends Component {
     componentWillUnmount() {
         unSubscribeToEvent(this.tokenDeleteStoreEvent);
         unSubscribeToEvent(this.tokenUpdateStoreEvent);
+        unSubscribeToEvent(this.tokenAddStoreEvent);
     }
 
     componentDidMount() {
@@ -41,6 +42,15 @@ class InnerStore extends Component {
         });
         this.tokenUpdateStoreEvent = subscribeToEvent(events['store.updated'], function(event, store) {
             toast.success(format("Update store with name: {name} successfully.", store));
+            that.setState(
+                {
+                    stores: new HasIdList(that.state.stores).upsert(store).get(), 
+                    showEditForm: false,
+                }
+            );
+        });
+        this.tokenAddStoreEvent = subscribeToEvent(events['store.added'], function(event, store) {
+            toast.success(format("Add store with name: {name} successfully.", store));
             that.setState(
                 {
                     stores: new HasIdList(that.state.stores).upsert(store).get(), 
@@ -79,10 +89,7 @@ class InnerStore extends Component {
         if(changedStore && changedStore.id) {
             updateStore(changedStore);
         } else {
-            console.log("save change", changedStore);
-            newStore(changedStore).then(function(item) {
-                that.upsertStore(item);
-            });
+            newStore(changedStore);
         }
     }
 
