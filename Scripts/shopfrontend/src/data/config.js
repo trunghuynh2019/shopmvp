@@ -7,6 +7,8 @@ export const events = {
     successfulUpdate: 'successfulUpdate',
     apiRequestError: 'apiRequestError',
     'store.removed': 'store.removed',
+    'store.added': 'store.added',
+    'store.updated': 'store.updated',
 }
 
 export const fetchGet = (url) => fetch(url).then(function(response) {

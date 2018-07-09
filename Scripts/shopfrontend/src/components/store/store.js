@@ -15,8 +15,6 @@ class InnerStore extends Component {
         super(props);
         this.state = {
             stores: [
-                {id: 20, name: "name20", address:"add20"},
-                {id: 25, name: "name25", address:"add25"}
             ],
             currentStoreId: "",
             showEditForm: false,
@@ -30,15 +28,24 @@ class InnerStore extends Component {
 
     componentWillUnmount() {
         unSubscribeToEvent(this.tokenDeleteStoreEvent);
+        unSubscribeToEvent(this.tokenUpdateStoreEvent);
     }
 
     componentDidMount() {
         var that = this;
         this.tokenDeleteStoreEvent = subscribeToEvent(events['store.removed'], function(event, id) {
-            console.log("inside subscriber to delete " + id);
             toast.success(format("Delete store with id: {} successfully.", id));
             that.setState(
                 {stores: new HasIdList(that.state.stores).removeById(id).get()}
+            );
+        });
+        this.tokenUpdateStoreEvent = subscribeToEvent(events['store.updated'], function(event, store) {
+            toast.success(format("Update store with name: {name} successfully.", store));
+            that.setState(
+                {
+                    stores: new HasIdList(that.state.stores).upsert(store).get(), 
+                    showEditForm: false,
+                }
             );
         });
         getAll().then(
@@ -70,11 +77,7 @@ class InnerStore extends Component {
     saveChange(changedStore) {
         var that = this;
         if(changedStore && changedStore.id) {
-            console.log("save change", changedStore);
-            updateStore(changedStore).then(function(item) {
-                console.log("return from update", item);
-                that.upsertStore(item);
-            });
+            updateStore(changedStore);
         } else {
             console.log("save change", changedStore);
             newStore(changedStore).then(function(item) {
@@ -88,7 +91,7 @@ class InnerStore extends Component {
         var that = this;
         this.dialog.show({
             title: 'Delete',
-            body: format("You are about to delete: {name}, are you sure?", store),
+            body: format("You are about to delete store: {name}, are you sure?", store),
             actions: [
               Dialog.CancelAction(),
               Dialog.DefaultAction(
