@@ -1,6 +1,5 @@
-import { Modal, Button } from "react-bootstrap"
+import { Modal, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap"
 import React, { Component } from "react"
-
 
 class StoreEditModal extends Component {
 
@@ -49,8 +48,6 @@ class StoreEditModal extends Component {
     }
 
     render() {
-        var that = this;
-        var store = this.props.store;
         return (
             <Modal show={this.props.show} onHide={this.handleClose}>
                 <Modal.Header closeButton>
@@ -58,9 +55,15 @@ class StoreEditModal extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                        <p>Name: <input name="name" value={this.state.name}  /></p>
+                        <FormGroup controlId="formControlsName">
+                            <ControlLabel>Name</ControlLabel>
+                            <FormControl name="name" type="text" placeholder="name" defaultValue={this.state.name} />
+                        </FormGroup>
+                        <FormGroup controlId="formControlsAddress">
+                            <ControlLabel>Address</ControlLabel>
+                            <FormControl name="address" type="text" placeholder="address" defaultValue={this.state.address} />
+                        </FormGroup>
                         <input type="hidden" name="id" value={this.state.id}/>
-                        <p>Address: <textarea name="address" value={this.state.address}></textarea></p>
                         <p><input type="submit" value="Submit" /></p>
                     </form>
                 </Modal.Body>

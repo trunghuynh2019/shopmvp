@@ -39,7 +39,6 @@ class InnerStore extends Component {
     }
 
     openEditPopup(id) {
-        console.log(this.findOne(id));
         var that = this;
         this.setState({currentStore: this.findOne(id), currentStoreId: id}, function() {
             that.setState({showEditForm: true});
@@ -97,7 +96,7 @@ class InnerStore extends Component {
     }
 
     deleteStore() {
-        
+
     }
 
     findOne(id) {
