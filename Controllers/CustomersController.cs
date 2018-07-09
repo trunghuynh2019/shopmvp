@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -45,6 +47,41 @@ namespace Shop.Controllers
             Customer customer = Customer.FromNameAndAddress(dto.name, dto.address);
             customerService.Save(customer);
             return Content(toJson(customer));
+        }
+
+        public ActionResult Update(int? id, CustomerDto dto)
+        {
+            var product = customerService.FindOne(id.Value);
+            if (product == null)
+            {
+                return HttpNotFound($"id ${id} not found");
+            }
+            try
+            {
+                return toContent(customerService.Update(product, name: dto.name, address: dto.address));
+            }
+            catch (DbEntityValidationException e)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+            }
+        }
+
+        public ActionResult Delete(int? id)
+        {
+            var store = customerService.FindOne(id.Value);
+            if (store == null)
+            {
+                return HttpNotFound($"id ${id} not found");
+            }
+            try
+            {
+                customerService.Delete(id.Value);
+                return toContent(new { id = id.Value });
+            }
+            catch (DbEntityValidationException e)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+            }
         }
     }
 }
