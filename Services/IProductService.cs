@@ -11,7 +11,7 @@ namespace Shop.Services
         List<Product> FindAll();
         Product FindOne(int Id);
         Product Save(Product product);
-        Product Update(Product Product, int productId, int customerId, int storeId, DateTime dateSold);
+        Product Update(Product Product, string name, double price);
         void Delete(int id);
     }
 }

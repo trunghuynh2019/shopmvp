@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
@@ -23,9 +24,9 @@ namespace Shop.Services
             return shopContext.Products.ToList();
         }
 
-        public Product FindOne(int Id)
+        public Product FindOne(int id)
         {
-            throw new NotImplementedException();
+            return shopContext.Products.Find(id);
         }
 
         public Product Save(Product product)
@@ -55,14 +56,21 @@ namespace Shop.Services
             }
         }
 
-        public Product Update(Product Product, int productId, int customerId, int storeId, DateTime dateSold)
+        public Product Update(Product product, string name, double price)
         {
-            throw new NotImplementedException();
+            product.Price = price;
+            product.Name = name;
+            shopContext.Entry(product).State = EntityState.Modified;
+            shopContext.SaveChanges();
+            return product;
         }
+
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            Product product = shopContext.Products.Find(id);
+            shopContext.Products.Remove(product);
+            shopContext.SaveChanges();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
@@ -25,7 +26,7 @@ namespace Shop.Services
 
         public Customer FindOne(int Id)
         {
-            throw new NotImplementedException();
+            return shopContext.Customers.Find(Id);
         }
 
         public Customer Save(Customer customer)
@@ -57,12 +58,19 @@ namespace Shop.Services
 
         public Customer Update(Customer customer, string name, string address)
         {
-            throw new NotImplementedException();
+            customer = FindOne(customer.Id);
+            customer.Name = name;
+            customer.Address = address;
+            shopContext.Entry(customer).State = EntityState.Modified;
+            shopContext.SaveChanges();
+            return customer;
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            Customer customer = FindOne(id);
+            shopContext.Customers.Remove(customer);
+            shopContext.SaveChanges();
         }
     }
 }

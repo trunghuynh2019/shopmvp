@@ -70,7 +70,9 @@ namespace Shop.Services
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            ProductSold productSold = FindOne(id);
+            shopContext.ProductSolds.Remove(productSold);
+            shopContext.SaveChanges();
         }
     }
 }
