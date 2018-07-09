@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 class BaseContainer extends Component {
+
     state = {
         loading: false
     }
@@ -15,8 +16,8 @@ class BaseContainer extends Component {
         super(props);
         this.showLoading = this.showLoading.bind(this);
         var that = this;
-        subscribeToEvent(events.successfulUpdate, function(event, message) {
-            toast("Wow so easy !" + message);
+        subscribeToEvent(events.apiRequestError, function(event, message) {
+            toast(message);
         });
         this.setSuccessful = this.setSuccessful.bind(this);
     }

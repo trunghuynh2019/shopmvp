@@ -1,6 +1,6 @@
-import {BASE_URL, fetchPost, fetchPut} from "../../data/config";
+import {BASE_URL, fetchPost, fetchPut, fetchGet} from "../../data/config";
 
-export const getAll = () => fetch(BASE_URL + "ProductSolds").then(res => res.json()).catch(function() {
+export const getAll = () => fetchGet(BASE_URL + "ProductSolds").then(res => res.json()).catch(function() {
     console.log("err getAll customer");
 });
 
