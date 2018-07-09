@@ -85,7 +85,7 @@ namespace Shop.Controllers
             try
             {
                 storeService.Delete(id.Value);
-                return toContent(new object());
+                return toContent(new {id = id.Value});
             }
             catch (DbEntityValidationException e)
             {
