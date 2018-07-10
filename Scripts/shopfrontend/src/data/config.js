@@ -19,9 +19,9 @@ export const events = {
     'product.added': 'product.added',
     'product.updated': 'product.updated',
 
-    'productStore.removed': 'productStore.removed',
-    'productStore.added': 'productStore.added',
-    'productStore.updated': 'productStore.updated',
+    'productSold.removed': 'productSold.removed',
+    'productSold.added': 'productSold.added',
+    'productSold.updated': 'productSold.updated',
 }
 
 export const fetchGet = (url) => fetch(url).then(function(response) {

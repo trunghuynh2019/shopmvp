@@ -1,19 +1,80 @@
-import {BASE_URL, fetchPost, fetchPut, fetchGet} from "../../data/config";
+import {
+    BASE_URL, fetchPost, fetchPut, fetchGet, notifyApiRequestError,
+    fetchDelete, publishEvent, events
+} from "../../data/config";
 
-export const getAll = () => fetchGet(BASE_URL + "ProductSolds").then(res => res.json()).catch(function() {
-    console.log("err getAll customer");
-});
+const notifyDeleteProductSoldSuccessful = (id) => {
+    publishEvent(events['productSold.removed'], id);
+}
 
-export const updateProductSold = (productSold) => fetchPut(BASE_URL + "ProductSolds/" + productSold.id, 
-    {
-        product_id: productSold.product_id,
-        customer_id: productSold.customer_id,
-        store_id: productSold.store_id,
-        date_sold: productSold.date_sold
-    }).then(res => res.json()).catch(function() {
-        console.log("err getAll customer");
+const notifyUpdateProductSoldSuccessful = (productSold) => {
+    publishEvent(events['productSold.updated'], productSold);
+}
+
+const notifyAddProductSoldSuccessful = (productSold) => {
+    publishEvent(events['productSold.added'], productSold);
+}
+
+export const getAll = () => fetchGet(BASE_URL + "ProductSolds").then(res => res.json())
+    .catch(function (res) {
+        console.log(res);
+        notifyApiRequestError("Error while loading productSolds");
     });
 
-export const newProductSold = (productSold) => fetchPost(BASE_URL + "ProductSolds/", productSold).then(res=>res.json()).catch(function() {
-    console.log("err getAll customer");
-});
+export const updateProductSold = (productSold) => fetchPut(BASE_URL + "ProductSolds/" + productSold.id, productSold)
+    .then(res => {
+        try {
+            var json = res.json();
+            return json;
+        } catch (err) {
+            throw Error(err.message);
+        }
+    }).then(
+        alreadyJsonproductSold => {
+            notifyUpdateProductSoldSuccessful(alreadyJsonproductSold);
+            return alreadyJsonproductSold;
+        }
+    )
+    .catch(function (res) {
+        console.log(res);
+        notifyApiRequestError("Error while update productSolds");
+    });
+
+export const newProductSold = (productSold) => fetchPost(BASE_URL + "ProductSolds/", productSold)
+    .then(res => {
+        try {
+            var json = res.json();
+            return json;
+        } catch (err) {
+            throw Error(err.message);
+        }
+    }).then(
+        alreadyJsonproductSold => {
+            notifyAddProductSoldSuccessful(alreadyJsonproductSold);
+            return alreadyJsonproductSold;
+        }
+    )
+    .catch(function (res) {
+        console.log(res);
+        notifyApiRequestError("Error while update productSolds");
+    });
+
+export const deleteProductSold = (id) => fetchDelete(BASE_URL + "ProductSolds/" + id)
+    .then(res => {
+        try {
+            var json = res.json();
+            return json;
+        } catch (err) {
+            throw Error(err.message);
+        }
+    })
+    .then(
+        alreadyJsonproductSold => {
+            notifyDeleteProductSoldSuccessful(alreadyJsonproductSold.id);
+            return alreadyJsonproductSold;
+        }
+    )
+    .catch(function (res) {
+        console.log(res);
+        notifyApiRequestError("Error while delete productSold");
+    });

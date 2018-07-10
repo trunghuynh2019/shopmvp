@@ -1,12 +1,16 @@
 import { Link } from 'react-router';
 import React, {Component} from 'react'
 import BaseContainer from '../BaseContainer';
-import {getAll, updateProductSold, newProductSold} from "./data";
+import {getAll, updateProductSold, newProductSold, deleteProductSold as apiDeleteProductSold} from "./data";
+import { HasIdList, subscribeToEvent, events, unSubscribeToEvent } from "../../data/config";
 import {getAll as storeGetAll} from "../store/data";
 import {getAll as productGetAll} from "../product/data";
 import {getAll as customerGetAll} from "../customer/data";
-import {HasIdList} from "../../data/config"
 import ProductSoldEditModal from "./product-sold-edit-modal";
+import {toast} from 'react-toastify';
+import format from "string-format";
+import Dialog from 'react-bootstrap-dialog'
+
 
 class InnerProductSold extends Component {
 
@@ -28,6 +32,39 @@ class InnerProductSold extends Component {
         this.saveChange = this.saveChange.bind(this);
     }
 
+    showDeleteProductSold(productSold) {
+        var that = this;
+        this.dialog.show({
+            title: 'Delete',
+            body: format("You are about to delete productSold with id: {id}, are you sure?", productSold),
+            actions: [
+              Dialog.CancelAction(),
+              Dialog.DefaultAction(
+                'Delete',
+                () => {
+                    that.deleteProductSold(productSold.id);
+                },
+                'btn-danger'
+              )
+            ],
+            bsSize: 'small',
+            onHide: (dialog) => {
+              dialog.hide()
+              console.log('closed by clicking background.')
+            }
+        });
+    }
+
+    deleteProductSold(id) {
+        apiDeleteProductSold(id);
+    }
+
+    componentWillUnmount() {
+        unSubscribeToEvent(this.tokenDeleteProductSoldEvent);
+        unSubscribeToEvent(this.tokenUpdateProductSoldEvent);
+        unSubscribeToEvent(this.tokenAddProductSoldEvent);
+    }
+
     componentDidMount() {
         var that = this;
         getAll().then(
@@ -47,9 +84,33 @@ class InnerProductSold extends Component {
             that.setState({stores: stores});
         });
 
+        this.tokenDeleteProductSoldEvent = subscribeToEvent(events['productSold.removed'], function(event, id) {
+            toast.success(format("Delete productSold with id: {} successfully.", id));
+            that.setState(
+                {productSolds: new HasIdList(that.state.productSolds).removeById(id).get()}
+            );
+        });
+        this.tokenUpdateProductSoldEvent = subscribeToEvent(events['productSold.updated'], function(event, productSold) {
+            toast.success(format("Update productSold with name: {name} successfully.", productSold));
+            that.setState(
+                {
+                    productSolds: new HasIdList(that.state.productSolds).upsert(productSold).get(), 
+                    showEditForm: false,
+                }
+            );
+        });
+        this.tokenAddProductSoldEvent = subscribeToEvent(events['productSold.added'], function(event, productSold) {
+            toast.success(format("Add productSold with name: {name} successfully.", productSold));
+            that.setState(
+                {
+                    productSolds: new HasIdList(that.state.productSolds).upsert(productSold).get(), 
+                    showEditForm: false,
+                }
+            );
+        });
+
     }
     openEditPopup(id) {
-        console.log(this.findOne(id));
         var that = this;
         this.setState({currentProductSold: this.findOne(id), currentStoreId: id}, function() {
             that.setState({showEditForm: true});
@@ -107,8 +168,8 @@ class InnerProductSold extends Component {
                         </td>
                         <td>
                             <button type="button" className="btn btn-danger" 
-                                onClick={() => that.openEditPopup(productSold.id)}>
-                            Edit
+                                onClick={() => that.showDeleteProductSold(productSold)}>
+                            Delete
                             </button>
                         </td>
                     </tr>
@@ -125,6 +186,7 @@ class InnerProductSold extends Component {
                     parentCallbackClose={this.closePopup}
                     handleCallbackSubmit={this.saveChange}
                     ></ProductSoldEditModal>
+                <Dialog ref={(el) => { this.dialog = el }} />
                 <button type="button" className="btn btn-primary" 
                                 onClick={() => that.openEditPopup()}>
                             Add new product sold

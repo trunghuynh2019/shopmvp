@@ -74,6 +74,24 @@ namespace Shop.Controllers
             }
         }
 
+        public ActionResult Delete(int? id)
+        {
+            var store = productSoldService.FindOne(id.Value);
+            if (store == null)
+            {
+                return HttpNotFound($"id ${id} not found");
+            }
+            try
+            {
+                productSoldService.Delete(id.Value);
+                return toContent(new { id = id.Value });
+            }
+            catch (DbEntityValidationException e)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, e.Message);
+            }
+        }
+
 
     }
 }
