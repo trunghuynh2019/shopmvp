@@ -108,7 +108,6 @@ class InnerProductSold extends Component {
                 }
             );
         });
-
     }
     openEditPopup(id) {
         var that = this;
@@ -119,29 +118,17 @@ class InnerProductSold extends Component {
 
     closePopup() {
         this.setState({currentProductSold: {}, currentStoreId: "", showEditForm: false});
-        console.log("close popup");
-    }
-
-    upsertProductSold(productSold) {
-        var newProductSolds = new HasIdList(this.state.productSolds).upsert(productSold).get();
-        this.setState({productSolds: newProductSolds});
     }
 
     saveChange(changedProductSold) {
         var that = this;
         if(changedProductSold && changedProductSold.id) {
             console.log("save change", changedProductSold);
-            updateProductSold(changedProductSold).then(function(item) {
-                console.log("return from update", item);
-                that.upsertProductSold(item);
-            });
+            updateProductSold(changedProductSold);
         } else {
             console.log("save change", changedProductSold);
-            newProductSold(changedProductSold).then(function(item) {
-                that.upsertProductSold(item);
-            });
+            newProductSold(changedProductSold);
         }
-        
     }
 
     findOne(id) {
