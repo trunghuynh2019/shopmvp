@@ -63,12 +63,17 @@ export const deleteStore = (id) => fetchDelete(BASE_URL + "Stores/" + id)
     .then(res => {
         try {
             var json = res.json();
-            notifyDeleteStoreSuccessful(id);
             return json;
         } catch (err) {
             throw Error(err.message);
         }
     })
+    .then(
+        jsonId => {
+            notifyDeleteStoreSuccessful(jsonId.id);
+            return jsonId;
+        }
+    )
     .catch(function (res) {
         console.log(res);
         notifyApiRequestError("Error while delete Store");
